@@ -3,6 +3,13 @@ spring:
     name: chatscope-backend
   profiles:
     default: local-consul
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:}
+    username: ${SPRING_DATASOURCE_USERNAME:}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
 management:
   endpoints:
@@ -25,7 +32,11 @@ chatscope:
     api-base-url: ${CHATSCOPE_OPENIM_API_BASE_URL:http://127.0.0.1:10002}
     chat-api-base-url: ${CHATSCOPE_OPENIM_CHAT_API_BASE_URL:http://127.0.0.1:10008}
     admin-api-base-url: ${CHATSCOPE_OPENIM_ADMIN_API_BASE_URL:http://127.0.0.1:10009}
+    secret: ${CHATSCOPE_OPENIM_SECRET:openIM123}
+    admin-user-id: ${CHATSCOPE_OPENIM_ADMIN_USER_ID:imAdmin}
+    bot-platform-id: ${CHATSCOPE_OPENIM_BOT_PLATFORM_ID:5}
     allow-public-direct-access: ${CHATSCOPE_OPENIM_ALLOW_PUBLIC_DIRECT_ACCESS:false}
+    callback-secret: ${CHATSCOPE_OPENIM_CALLBACK_SECRET:}
   ai:
     default-daily-limit: ${CHATSCOPE_AI_DEFAULT_DAILY_LIMIT:20}
     quota-timezone: ${CHATSCOPE_AI_QUOTA_TIMEZONE:Asia/Shanghai}

@@ -13,6 +13,12 @@ require_cmd() {
 main() {
   require_cmd mvn
 
+  if [ "${CHATSCOPE_LOAD_DOTENV:-true}" != "false" ] && [ -f .env ]; then
+    set -a
+    source .env
+    set +a
+  fi
+
   if command -v /usr/libexec/java_home >/dev/null 2>&1; then
     local java_25_home
     java_25_home="$(/usr/libexec/java_home -v 25 2>/dev/null || true)"
