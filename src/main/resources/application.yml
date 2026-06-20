@@ -10,6 +10,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jackson:
     property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
 
 management:
   endpoints:
@@ -44,3 +45,29 @@ chatscope:
     mini-window-minutes: ${CHATSCOPE_MEMORY_MINI_WINDOW_MINUTES:5}
     archive-window-minutes: ${CHATSCOPE_MEMORY_ARCHIVE_WINDOW_MINUTES:30}
     demo-archive-window-minutes: ${CHATSCOPE_MEMORY_DEMO_ARCHIVE_WINDOW_MINUTES:5}
+  abuse:
+    challenge-enabled: ${CHATSCOPE_ABUSE_CHALLENGE_ENABLED:true}
+    code-resend-cooldown-seconds: ${CHATSCOPE_ABUSE_CODE_RESEND_COOLDOWN_SECONDS:60}
+    sms:
+      global-daily-budget: ${CHATSCOPE_ABUSE_SMS_GLOBAL_DAILY_BUDGET:800}
+      per-ip-per-minute: ${CHATSCOPE_ABUSE_SMS_PER_IP_PER_MINUTE:3}
+      per-ip-per-hour: ${CHATSCOPE_ABUSE_SMS_PER_IP_PER_HOUR:10}
+      per-target-per-hour: ${CHATSCOPE_ABUSE_SMS_PER_TARGET_PER_HOUR:3}
+      per-target-per-day: ${CHATSCOPE_ABUSE_SMS_PER_TARGET_PER_DAY:8}
+      per-cidr-per-day: ${CHATSCOPE_ABUSE_SMS_PER_CIDR_PER_DAY:50}
+    smtp:
+      global-daily-budget: ${CHATSCOPE_ABUSE_SMTP_GLOBAL_DAILY_BUDGET:2000}
+      per-ip-per-minute: ${CHATSCOPE_ABUSE_SMTP_PER_IP_PER_MINUTE:5}
+      per-ip-per-hour: ${CHATSCOPE_ABUSE_SMTP_PER_IP_PER_HOUR:20}
+      per-target-per-hour: ${CHATSCOPE_ABUSE_SMTP_PER_TARGET_PER_HOUR:5}
+      per-target-per-day: ${CHATSCOPE_ABUSE_SMTP_PER_TARGET_PER_DAY:20}
+      per-cidr-per-day: ${CHATSCOPE_ABUSE_SMTP_PER_CIDR_PER_DAY:100}
+    registration:
+      per-ip-per-hour: ${CHATSCOPE_ABUSE_REG_PER_IP_PER_HOUR:3}
+      per-ip-per-day: ${CHATSCOPE_ABUSE_REG_PER_IP_PER_DAY:10}
+      per-cidr-per-day: ${CHATSCOPE_ABUSE_REG_PER_CIDR_PER_DAY:50}
+      verify-failure-lock-threshold: ${CHATSCOPE_ABUSE_REG_VERIFY_FAILURE_LOCK_THRESHOLD:5}
+      verify-failure-lock-minutes: ${CHATSCOPE_ABUSE_REG_VERIFY_FAILURE_LOCK_MINUTES:15}
+    ai:
+      per-ip-per-minute: ${CHATSCOPE_ABUSE_AI_PER_IP_PER_MINUTE:20}
+      per-user-per-minute: ${CHATSCOPE_ABUSE_AI_PER_USER_PER_MINUTE:10}
