@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://100.89.110.91:5432/chatscope}
+    username: ${SPRING_DATASOURCE_USERNAME:chatscope_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+  data:
+    redis:
+      # Consul service cache-redis passing address, not local fallback Docker Redis.
+      host: ${SPRING_DATA_REDIS_HOST:100.105.213.32}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      password: ${SPRING_DATA_REDIS_PASSWORD:}
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:100.89.110.91:9092}
+    client-id: chatscope-backend-local
+    consumer:
+      group-id: chatscope-backend-local
+      auto-offset-reset: earliest
+
+chatscope:
+  consul:
+    url: ${CHATSCOPE_CONSUL_URL:http://100.89.110.91:8500}

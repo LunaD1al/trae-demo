@@ -1,0 +1,74 @@
+name: chatscope-middleware
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: chatscope-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${CHATSCOPE_POSTGRES_DB:-chatscope}
+      POSTGRES_USER: ${CHATSCOPE_POSTGRES_USER:-chatscope}
+      POSTGRES_PASSWORD: ${CHATSCOPE_POSTGRES_PASSWORD:-chatscope_dev_only}
+    ports:
+      - "127.0.0.1:${CHATSCOPE_POSTGRES_PORT:-15432}:5432"
+    volumes:
+      - chatscope-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: chatscope-redis
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${CHATSCOPE_REDIS_PASSWORD:-chatscope_dev_only}
+    command:
+      - sh
+      - -c
+      - redis-server --appendonly yes --requirepass "$${REDIS_PASSWORD}"
+    ports:
+      - "127.0.0.1:${CHATSCOPE_REDIS_PORT:-16379}:6379"
+    volumes:
+      - chatscope-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  kafka:
+    image: bitnamilegacy/kafka:3.5.1
+    container_name: chatscope-kafka
+    restart: unless-stopped
+    user: root
+    environment:
+      TZ: Asia/Shanghai
+      KAFKA_CFG_NODE_ID: 0
+      KAFKA_CFG_PROCESS_ROLES: controller,broker
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@chatscope-kafka:9093
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_LISTENERS: INTERNAL://:19092,CONTROLLER://:9093,EXTERNAL://:9092
+      KAFKA_CFG_ADVERTISED_LISTENERS: INTERNAL://chatscope-kafka:19092,EXTERNAL://127.0.0.1:19092
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_NUM_PARTITIONS: 3
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+    ports:
+      - "127.0.0.1:${CHATSCOPE_KAFKA_PORT:-19092}:9092"
+    volumes:
+      - chatscope-kafka-data:/bitnami/kafka
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 >/dev/null 2>&1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  chatscope-postgres-data:
+  chatscope-redis-data:
+  chatscope-kafka-data:

@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      password: ${SPRING_DATA_REDIS_PASSWORD}
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    client-id: ${SPRING_KAFKA_CLIENT_ID:chatscope-backend-dev}
+    consumer:
+      group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID:chatscope-backend-dev}
+      auto-offset-reset: earliest
+
+management:
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
